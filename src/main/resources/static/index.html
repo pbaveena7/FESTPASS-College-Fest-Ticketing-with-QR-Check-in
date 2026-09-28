@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FestPass - College Event Hub</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fa-solid fa-ticket-alt"></i> FESTPASS
+                </div>
+                <div class="subtitle">College Event Hub</div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <button class="nav-btn active" onclick="showTab('dashboard')" id="nav-dashboard">
+                    <i class="fa-solid fa-chart-pie"></i> Dashboard
+                </button>
+                <button class="nav-btn" onclick="showTab('events')" id="nav-events">
+                    <i class="fa-solid fa-calendar-days"></i> Events
+                </button>
+                <button class="nav-btn" onclick="showTab('attendees')" id="nav-attendees">
+                    <i class="fa-solid fa-users"></i> Attendees
+                </button>
+                <button class="nav-btn" onclick="showTab('tickets')" id="nav-tickets">
+                    <i class="fa-solid fa-qrcode"></i> Tickets
+                </button>
+                <button class="nav-btn checkin-btn" onclick="showTab('checkin')" id="nav-checkin">
+                    <i class="fa-solid fa-camera"></i> QR Check-in
+                </button>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="main-wrapper">
+            <!-- Topbar -->
+            <header class="topbar">
+                <div class="topbar-title">
+                    <h2 id="page-title">Dashboard</h2>
+                </div>
+                <div class="topbar-actions">
+                    <span class="date-display" id="current-date"></span>
+                    <button class="icon-btn" title="Toggle Theme" onclick="toggleTheme()">
+                        <i class="fa-solid fa-moon"></i>
+                    </button>
+                    <button class="icon-btn" title="Notifications">
+                        <i class="fa-solid fa-bell"></i>
+                        <span class="badge">3</span>
+                    </button>
+                    <div class="profile">
+                        <div class="avatar">A</div>
+                        <span class="profile-name">Admin</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Content Area -->
+            <main class="content-area">
+                
+                <!-- Toast Notification Container -->
+                <div id="toast-container"></div>
+
+                <!-- Dashboard Tab -->
+                <section id="dashboard" class="tab-content active">
+                    <div class="dashboard-header">
+                        <p class="text-muted">Welcome back! Here is your event control center overview.</p>
+                    </div>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-card primary">
+                            <div class="stat-icon"><i class="fa-solid fa-calendar"></i></div>
+                            <div class="stat-details">
+                                <h3>Total Events</h3>
+                                <span class="stat-value" id="total-events">0</span>
+                            </div>
+                        </div>
+                        <div class="stat-card info">
+                            <div class="stat-icon"><i class="fa-solid fa-ticket"></i></div>
+                            <div class="stat-details">
+                                <h3>Total Tickets</h3>
+                                <span class="stat-value" id="total-tickets">0</span>
+                            </div>
+                        </div>
+                        <div class="stat-card success">
+                            <div class="stat-icon"><i class="fa-solid fa-check-circle"></i></div>
+                            <div class="stat-details">
+                                <h3>Checked-in</h3>
+                                <span class="stat-value" id="total-checked-in">0</span>
+                            </div>
+                        </div>
+                        <div class="stat-card warning">
+                            <div class="stat-icon"><i class="fa-solid fa-door-open"></i></div>
+                            <div class="stat-details">
+                                <h3>Available</h3>
+                                <span class="stat-value" id="total-available">0</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card mt-4">
+                        <div class="card-header">
+                            <h3><i class="fa-solid fa-chart-bar"></i> Event Attendance & Capacity</h3>
+                        </div>
+                        <div class="card-body">
+                            <div id="attendance-list" class="attendance-container">
+                                <!-- Populated by JS -->
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Events Tab -->
+                <section id="events" class="tab-content">
+                    <div class="section-header">
+                        <p class="text-muted">Manage your college events and ticket capacity</p>
+                    </div>
+                    
+                    <div class="card mb-4">
+                        <div class="card-header flex-between">
+                            <h3><i class="fa-solid fa-plus-circle"></i> Create / Edit Event</h3>
+                            <button type="button" class="btn btn-outline" onclick="clearEventForm()">
+                                <i class="fa-solid fa-eraser"></i> Clear Form
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <form id="event-form" class="modern-form">
+                                <input type="hidden" id="event-id">
+                                <div class="form-group">
+                                    <label>Event Name</label>
+                                    <input type="text" id="event-name" placeholder="e.g., Tech Fest 2026" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Date</label>
+                                    <input type="date" id="event-date" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Venue</label>
+                                    <input type="text" id="event-venue" placeholder="e.g., Main Auditorium" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Capacity</label>
+                                    <input type="number" id="event-capacity" placeholder="Max attendees" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Ticket Price</label>
+                                    <input type="number" id="event-price" placeholder="0.00" step="0.01" required>
+                                </div>
+                                <div class="form-actions">
+                                    <button type="submit" class="btn btn-primary"><i class="fa-solid fa-save"></i> Save Event</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="card table-card">
+                        <div class="card-header">
+                            <h3><i class="fa-solid fa-list"></i> All Events</h3>
+                        </div>
+                        <div class="table-responsive">
+                            <table id="events-table" class="modern-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th><th>Event</th><th>Date</th><th>Venue</th><th>Capacity</th><th>Price</th><th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Attendees Tab -->
+                <section id="attendees" class="tab-content">
+                    <div class="section-header">
+                        <p class="text-muted">Manage registered participants</p>
+                    </div>
+
+                    <div class="card mb-4">
+                        <div class="card-header flex-between">
+                            <h3><i class="fa-solid fa-user-plus"></i> Register Attendee</h3>
+                            <button type="button" class="btn btn-outline" onclick="clearAttendeeForm()">
+                                <i class="fa-solid fa-eraser"></i> Clear Form
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <form id="attendee-form" class="modern-form">
+                                <input type="hidden" id="attendee-id">
+                                <div class="form-group">
+                                    <label>Full Name</label>
+                                    <input type="text" id="attendee-name" placeholder="e.g., John Doe" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Email Address</label>
+                                    <input type="email" id="attendee-email" placeholder="john@example.com" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Phone Number</label>
+                                    <input type="text" id="attendee-phone" placeholder="e.g., 9876543210" required>
+                                </div>
+                                <div class="form-actions">
+                                    <button type="submit" class="btn btn-primary"><i class="fa-solid fa-save"></i> Save Attendee</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="card table-card">
+                        <div class="card-header">
+                            <h3><i class="fa-solid fa-users"></i> All Attendees</h3>
+                        </div>
+                        <div class="table-responsive">
+                            <table id="attendees-table" class="modern-table">
+                                <thead>
+                                    <tr>
+                                        <th>Attendee</th><th>Email</th><th>Phone</th><th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Tickets Tab -->
+                <section id="tickets" class="tab-content">
+                    <div class="section-header">
+                        <p class="text-muted">Generate and view digital tickets</p>
+                    </div>
+
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h3><i class="fa-solid fa-ticket-alt"></i> Issue New Ticket</h3>
+                        </div>
+                        <div class="card-body">
+                            <form id="ticket-form" class="modern-form">
+                                <div class="form-group">
+                                    <label>Event ID</label>
+                                    <input type="number" id="ticket-event-id" placeholder="Enter Event ID" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Attendee ID</label>
+                                    <input type="number" id="ticket-attendee-id" placeholder="Enter Attendee ID" required>
+                                </div>
+                                <div class="form-actions" style="flex: 1 1 100%; display: flex; align-items: flex-end;">
+                                    <button type="submit" class="btn btn-success" style="width: 200px;"><i class="fa-solid fa-wand-magic-sparkles"></i> Generate Ticket</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="card table-card">
+                        <div class="card-header">
+                            <h3><i class="fa-solid fa-list-alt"></i> Issued Tickets</h3>
+                        </div>
+                        <div class="table-responsive">
+                            <table id="tickets-table" class="modern-table ticket-table">
+                                <thead>
+                                    <tr>
+                                        <th>Ticket</th><th>Event</th><th>Attendee</th><th>Status</th><th>Issued</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- QR Check-in Tab -->
+                <section id="checkin" class="tab-content">
+                    
+                    <div class="checkin-container">
+                        <div class="checkin-panel card">
+                            <div class="checkin-header">
+                                <i class="fa-solid fa-qrcode checkin-icon-large"></i>
+                                <h2>QR CHECK-IN</h2>
+                                <p>Scan or enter ticket code to validate entry</p>
+                            </div>
+                            
+                            <form id="checkin-form" class="checkin-form">
+                                <div class="qr-input-wrapper">
+                                    <i class="fa-solid fa-barcode qr-input-icon"></i>
+                                    <input type="text" id="checkin-qr" placeholder="e.g. FP-8A72X91" required autocomplete="off">
+                                </div>
+                                <button type="submit" class="btn btn-large btn-block btn-success mt-3">
+                                    <i class="fa-solid fa-check-to-slot"></i> CHECK IN
+                                </button>
+                            </form>
+                        </div>
+
+                        <div id="checkin-result" class="checkin-result-panel">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
