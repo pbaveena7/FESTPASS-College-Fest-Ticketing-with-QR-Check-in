@@ -1,5 +1,14 @@
 package com.example.festpass.service;
 
+import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.example.festpass.exception.BadRequestException;
 import com.example.festpass.exception.ResourceNotFoundException;
 import com.example.festpass.model.Attendee;
@@ -9,13 +18,6 @@ import com.example.festpass.model.TicketStatus;
 import com.example.festpass.repository.AttendeeRepository;
 import com.example.festpass.repository.FestEventRepository;
 import com.example.festpass.repository.TicketRepository;
-import org.springframework.stereotype.Service;
-
-import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 
 @Service
 public class TicketService {
@@ -30,6 +32,7 @@ public class TicketService {
         this.attendeeRepository = attendeeRepository;
     }
 
+    @Transactional
     public Ticket generateTicket(Long eventId, Long attendeeId) {
         FestEvent event = festEventRepository.findById(eventId)
                 .orElseThrow(() -> new ResourceNotFoundException("Event not found"));
@@ -50,7 +53,16 @@ public class TicketService {
         ticket.setStatus(TicketStatus.VALID);
         ticket.setIssuedDate(LocalDate.now());
 
-        return ticketRepository.save(ticket);
+        Ticket savedTicket = ticketRepository.save(ticket);
+        savedTicket.getEvent().getName();
+        savedTicket.getEvent().getDate();
+        savedTicket.getEvent().getVenue();
+        savedTicket.getEvent().getCapacity();
+        savedTicket.getEvent().getTicketPrice();
+        savedTicket.getAttendee().getName();
+        savedTicket.getAttendee().getEmail();
+        savedTicket.getAttendee().getPhone();
+        return savedTicket;
     }
 
     public List<Ticket> getAllTickets() {
@@ -60,6 +72,10 @@ public class TicketService {
     public Ticket getTicketById(Long id) {
         return ticketRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Ticket not found"));
+    }
+
+    public List<Ticket> getTicketsByAttendee(Long attendeeId) {
+        return ticketRepository.findAllByAttendee_IdOrderByIssuedDateDesc(attendeeId);
     }
 
     public Map<String, Object> checkIn(String qrCode) {
@@ -97,6 +113,19 @@ public class TicketService {
         response.put("checkedIn", checkedIn);
         response.put("remainingCapacity", remainingCapacity);
 
+        return response;
+    }
+
+    public Map<String, Object> getEventAvailability(Long eventId) {
+        FestEvent event = festEventRepository.findById(eventId)
+                .orElseThrow(() -> new ResourceNotFoundException("Event not found"));
+        long ticketsIssued = ticketRepository.countByEvent(event);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("eventId", event.getId());
+        response.put("capacity", event.getCapacity());
+        response.put("ticketsIssued", ticketsIssued);
+        response.put("availableSeats", Math.max(0, event.getCapacity() - ticketsIssued));
         return response;
     }
 }

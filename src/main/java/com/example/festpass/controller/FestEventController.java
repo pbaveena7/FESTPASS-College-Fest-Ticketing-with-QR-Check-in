@@ -1,14 +1,22 @@
 package com.example.festpass.controller;
 
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.example.festpass.model.FestEvent;
 import com.example.festpass.service.FestEventService;
 import com.example.festpass.service.TicketService;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/festpass/events")
@@ -53,5 +61,10 @@ public class FestEventController {
     @GetMapping("/{id}/attendance")
     public ResponseEntity<Map<String, Object>> getEventAttendance(@PathVariable Long id) {
         return new ResponseEntity<>(ticketService.getEventAttendance(id), HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}/availability")
+    public ResponseEntity<Map<String, Object>> getEventAvailability(@PathVariable Long id) {
+        return new ResponseEntity<>(ticketService.getEventAvailability(id), HttpStatus.OK);
     }
 }

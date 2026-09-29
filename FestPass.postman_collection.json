@@ -6,6 +6,79 @@
 	},
 	"item": [
 		{
+			"name": "Authentication and Sessions",
+			"item": [
+				{
+					"name": "Get CSRF Token",
+					"event": [{"listen":"test","script":{"exec":["pm.collectionVariables.set('csrfToken', pm.response.json().token);"]}}],
+					"request": {"method":"GET","header":[],"url":{"raw":"{{baseUrl}}/api/auth/csrf","host":["{{baseUrl}}"],"path":["api","auth","csrf"]}},
+					"response": []
+				},
+				{
+					"name": "Register Attendee",
+					"request": {"method":"POST","header":[{"key":"Content-Type","value":"application/json"},{"key":"X-XSRF-TOKEN","value":"{{csrfToken}}"}],"body":{"mode":"raw","raw":"{\n  \"name\": \"Attendee Example\",\n  \"email\": \"attendee@example.com\",\n  \"password\": \"ChangeMe123!\",\n  \"confirmPassword\": \"ChangeMe123!\",\n  \"role\": \"ATTENDEE\"\n}"},"url":{"raw":"{{baseUrl}}/api/auth/register","host":["{{baseUrl}}"],"path":["api","auth","register"]}},
+					"response": []
+				},
+				{
+					"name": "Register Organizer (requires enrollment code)",
+					"request": {"method":"POST","header":[{"key":"Content-Type","value":"application/json"},{"key":"X-XSRF-TOKEN","value":"{{csrfToken}}"}],"body":{"mode":"raw","raw":"{\n  \"name\": \"Organizer Example\",\n  \"email\": \"organizer@example.com\",\n  \"password\": \"ChangeMe123!\",\n  \"confirmPassword\": \"ChangeMe123!\",\n  \"role\": \"ORGANIZER\",\n  \"organizerCode\": \"{{organizerCode}}\"\n}"},"url":{"raw":"{{baseUrl}}/api/auth/register","host":["{{baseUrl}}"],"path":["api","auth","register"]}},
+					"response": []
+				},
+				{
+					"name": "Login Attendee",
+					"request": {"method":"POST","header":[{"key":"Content-Type","value":"application/json"},{"key":"X-XSRF-TOKEN","value":"{{csrfToken}}"}],"body":{"mode":"raw","raw":"{\n  \"email\": \"attendee@example.com\",\n  \"password\": \"ChangeMe123!\"\n}"},"url":{"raw":"{{baseUrl}}/api/auth/login","host":["{{baseUrl}}"],"path":["api","auth","login"]}},
+					"response": []
+				},
+				{
+					"name": "Attendee access to organizer API (expect 403)",
+					"request": {"method":"GET","header":[],"url":{"raw":"{{baseUrl}}/api/festpass/attendees","host":["{{baseUrl}}"],"path":["api","festpass","attendees"]}},
+					"response": []
+				},
+				{
+					"name": "Refresh CSRF Before Organizer Login",
+					"event": [{"listen":"test","script":{"exec":["pm.collectionVariables.set('csrfToken', pm.response.json().token);"]}}],
+					"request": {"method":"GET","header":[],"url":{"raw":"{{baseUrl}}/api/auth/csrf","host":["{{baseUrl}}"],"path":["api","auth","csrf"]}},
+					"response": []
+				},
+				{
+					"name": "Login Organizer",
+					"request": {"method":"POST","header":[{"key":"Content-Type","value":"application/json"},{"key":"X-XSRF-TOKEN","value":"{{csrfToken}}"}],"body":{"mode":"raw","raw":"{\n  \"email\": \"organizer@example.com\",\n  \"password\": \"ChangeMe123!\"\n}"},"url":{"raw":"{{baseUrl}}/api/auth/login","host":["{{baseUrl}}"],"path":["api","auth","login"]}},
+					"response": []
+				},
+				{
+					"name": "Refresh CSRF Token After Login",
+					"event": [{"listen":"test","script":{"exec":["pm.collectionVariables.set('csrfToken', pm.response.json().token);"]}}],
+					"request": {"method":"GET","header":[],"url":{"raw":"{{baseUrl}}/api/auth/csrf","host":["{{baseUrl}}"],"path":["api","auth","csrf"]}},
+					"response": []
+				},
+				{
+					"name": "Current Account",
+					"request": {"method":"GET","header":[],"url":{"raw":"{{baseUrl}}/api/auth/me","host":["{{baseUrl}}"],"path":["api","auth","me"]}},
+					"response": []
+				},
+				{
+					"name": "Read Own Profile",
+					"request": {"method":"GET","header":[],"url":{"raw":"{{baseUrl}}/api/auth/profile","host":["{{baseUrl}}"],"path":["api","auth","profile"]}},
+					"response": []
+				},
+				{
+					"name": "Update Own Profile",
+					"request": {"method":"PUT","header":[{"key":"Content-Type","value":"application/json"},{"key":"X-XSRF-TOKEN","value":"{{csrfToken}}"}],"body":{"mode":"raw","raw":"{\n  \"name\": \"Updated Name\",\n  \"email\": \"attendee@example.com\",\n  \"phone\": \"1234567890\"\n}"},"url":{"raw":"{{baseUrl}}/api/auth/profile","host":["{{baseUrl}}"],"path":["api","auth","profile"]}},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"request": {"method":"POST","header":[{"key":"X-XSRF-TOKEN","value":"{{csrfToken}}"}],"url":{"raw":"{{baseUrl}}/api/auth/logout","host":["{{baseUrl}}"],"path":["api","auth","logout"]}},
+					"response": []
+				},
+				{
+					"name": "Unauthenticated protected API (expect 401)",
+					"request": {"method":"GET","header":[{"key":"Cookie","value":"","disabled":true}],"url":{"raw":"{{baseUrl}}/api/festpass/attendees","host":["{{baseUrl}}"],"path":["api","festpass","attendees"]}},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "Events",
 			"item": [
 				{
@@ -16,6 +89,10 @@
 							{
 								"key": "Content-Type",
 								"value": "application/json"
+							},
+							{
+								"key": "X-XSRF-TOKEN",
+								"value": "{{csrfToken}}"
 							}
 						],
 						"body": {
@@ -76,6 +153,11 @@
 					"response": []
 				},
 				{
+					"name": "Event Availability (public aggregate)",
+					"request": {"method":"GET","header":[],"url":{"raw":"{{baseUrl}}/api/festpass/events/1/availability","host":["{{baseUrl}}"],"path":["api","festpass","events","1","availability"]}},
+					"response": []
+				},
+				{
 					"name": "Update Event",
 					"request": {
 						"method": "PUT",
@@ -83,6 +165,10 @@
 							{
 								"key": "Content-Type",
 								"value": "application/json"
+							},
+							{
+								"key": "X-XSRF-TOKEN",
+								"value": "{{csrfToken}}"
 							}
 						],
 						"body": {
@@ -108,7 +194,7 @@
 					"name": "Delete Event",
 					"request": {
 						"method": "DELETE",
-						"header": [],
+						"header": [{"key":"X-XSRF-TOKEN","value":"{{csrfToken}}"}],
 						"url": {
 							"raw": "{{baseUrl}}/api/festpass/events/1",
 							"host": [
@@ -158,6 +244,10 @@
 							{
 								"key": "Content-Type",
 								"value": "application/json"
+							},
+							{
+								"key": "X-XSRF-TOKEN",
+								"value": "{{csrfToken}}"
 							}
 						],
 						"body": {
@@ -225,6 +315,10 @@
 							{
 								"key": "Content-Type",
 								"value": "application/json"
+							},
+							{
+								"key": "X-XSRF-TOKEN",
+								"value": "{{csrfToken}}"
 							}
 						],
 						"body": {
@@ -250,7 +344,7 @@
 					"name": "Delete Attendee",
 					"request": {
 						"method": "DELETE",
-						"header": [],
+						"header": [{"key":"X-XSRF-TOKEN","value":"{{csrfToken}}"}],
 						"url": {
 							"raw": "{{baseUrl}}/api/festpass/attendees/1",
 							"host": [
@@ -279,6 +373,10 @@
 							{
 								"key": "Content-Type",
 								"value": "application/json"
+							},
+							{
+								"key": "X-XSRF-TOKEN",
+								"value": "{{csrfToken}}"
 							}
 						],
 						"body": {
@@ -297,6 +395,11 @@
 							]
 						}
 					},
+					"response": []
+				},
+				{
+					"name": "My Tickets (attendee session)",
+					"request": {"method":"GET","header":[],"url":{"raw":"{{baseUrl}}/api/festpass/tickets/mine","host":["{{baseUrl}}"],"path":["api","festpass","tickets","mine"]}},
 					"response": []
 				},
 				{
@@ -346,6 +449,10 @@
 							{
 								"key": "Content-Type",
 								"value": "application/json"
+							},
+							{
+								"key": "X-XSRF-TOKEN",
+								"value": "{{csrfToken}}"
 							}
 						],
 						"body": {
@@ -374,6 +481,14 @@
 		{
 			"key": "baseUrl",
 			"value": "http://localhost:8081"
+		},
+		{
+			"key": "csrfToken",
+			"value": ""
+		},
+		{
+			"key": "organizerCode",
+			"value": ""
 		}
 	]
 }

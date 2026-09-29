@@ -5,12 +5,100 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FestPass - College Event Hub</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    
-    <div class="app-container">
+    <section id="auth-screen" class="auth-screen">
+        <div class="auth-brand-panel">
+            <a class="brand-lockup" href="/" aria-label="FestPass home"><span class="brand-mark"><i class="fa-solid fa-ticket"></i></span><span>FESTPASS</span></a>
+            <div class="auth-brand-copy"><p class="eyebrow">COLLEGE FEST TICKETING &amp; QR CHECK-IN</p><h1>Every event<br>has its <span>people.</span></h1><p>Find your place in the crowd, or bring the whole event together.</p></div>
+            <div class="auth-brand-foot"><span>EVENTS / PASSES / ENTRY</span><span>FESTPASS © 2026</span></div>
+        </div>
+        <div class="auth-content">
+            <div class="auth-card">
+                <div class="auth-tabs" role="tablist" aria-label="Account access">
+                    <button class="auth-tab active" type="button" role="tab" aria-selected="true" data-auth-view="login">Log in</button>
+                    <button class="auth-tab" type="button" role="tab" aria-selected="false" data-auth-view="register">Create account</button>
+                </div>
+                <section id="login-panel" class="auth-panel active">
+                    <p class="eyebrow">WELCOME BACK</p><h2>Good to see you.</h2><p class="auth-subtitle">Sign in to continue to your FestPass.</p>
+                    <form id="auth-login-form" class="auth-form">
+                        <label for="login-email">Email address</label><input id="login-email" name="email" type="email" autocomplete="username" required>
+                        <label for="login-password">Password</label><input id="login-password" name="password" type="password" autocomplete="current-password" required>
+                        <p id="login-error" class="auth-error" role="alert"></p>
+                        <button class="btn btn-primary auth-submit" type="submit">Log in <i class="fa-solid fa-arrow-right"></i></button>
+                    </form>
+                    <p class="auth-switch-copy">New to FestPass? <button type="button" data-auth-view="register">Create an account</button></p>
+                </section>
+                <section id="register-panel" class="auth-panel">
+                    <p class="eyebrow">YOUR NEXT EVENT STARTS HERE</p><h2>Create your account.</h2><p class="auth-subtitle">One account for your events and entry passes.</p>
+                    <form id="auth-register-form" class="auth-form auth-register-form">
+                        <label for="register-name">Full name</label><input id="register-name" name="name" type="text" autocomplete="name" maxlength="120" required>
+                        <label for="register-email">Email address</label><input id="register-email" name="email" type="email" autocomplete="email" required>
+                        <label for="register-password">Password</label><input id="register-password" name="password" type="password" autocomplete="new-password" minlength="8" required>
+                        <label for="register-confirm-password">Confirm password</label><input id="register-confirm-password" name="confirmPassword" type="password" autocomplete="new-password" minlength="8" required>
+                        <fieldset class="role-choice"><legend>Choose your account</legend>
+                            <label class="role-option"><input type="radio" name="role" value="ATTENDEE" checked><span><i class="fa-solid fa-ticket"></i><strong>Attendee</strong><small>Discover events and manage your tickets</small></span></label>
+                            <label class="role-option"><input type="radio" name="role" value="ORGANIZER"><span><i class="fa-solid fa-sliders"></i><strong>Organizer</strong><small>Manage events, tickets, and check-in</small></span></label>
+                        </fieldset>
+                        <div id="organizer-code-field" class="organizer-code-field is-hidden"><label for="organizer-code">Organizer enrollment code</label><input id="organizer-code" name="organizerCode" type="password" autocomplete="off"><small>Ask the project administrator for the enrollment code.</small></div>
+                        <p id="register-error" class="auth-error" role="alert"></p>
+                        <button class="btn btn-primary auth-submit" type="submit">Create account <i class="fa-solid fa-arrow-right"></i></button>
+                    </form>
+                    <p class="auth-switch-copy">Already registered? <button type="button" data-auth-view="login">Log in</button></p>
+                </section>
+            </div>
+            <p class="auth-security-note"><i class="fa-solid fa-lock"></i> Secure, session-based access. Organizer and attendee permissions are checked by the server.</p>
+        </div>
+    </section>
+
+    <section id="portal-selection" class="portal-selection is-hidden">
+        <div class="portal-welcome">
+            <a class="brand-lockup" href="#portal-selection" aria-label="FestPass home">
+                <span class="brand-mark"><i class="fa-solid fa-ticket"></i></span>
+                <span>FESTPASS</span>
+            </a>
+            <p class="eyebrow">COLLEGE FEST TICKETING &amp; QR CHECK-IN</p>
+            <h1>Make every<br><span>entry count.</span></h1>
+            <p class="welcome-copy">Manage events. Issue digital tickets. Track attendance.</p>
+            <div class="welcome-rule"><span></span><span></span><span></span></div>
+            <p class="portal-prompt">Choose your portal</p>
+        </div>
+        <div class="portal-choices">
+            <article class="portal-choice organizer-choice">
+                <div class="choice-index">01 / OPERATIONS</div>
+                <div class="choice-icon"><i class="fa-solid fa-sliders"></i></div>
+                <h2>Organizer</h2>
+                <p class="choice-audience">EVENT ORGANIZATION TEAM</p>
+                <p class="choice-copy">A clear view of your event operations, from the first registration to the final check-in.</p>
+                <ul>
+                    <li><i class="fa-solid fa-check"></i> Create and manage events</li>
+                    <li><i class="fa-solid fa-check"></i> Track registrations and attendees</li>
+                    <li><i class="fa-solid fa-check"></i> Manage tickets and check-in</li>
+                </ul>
+                <button class="portal-enter" type="button" onclick="enterPortal('organizer')">Organizer Portal <i class="fa-solid fa-arrow-right"></i></button>
+            </article>
+            <article class="portal-choice attendee-choice">
+                <div class="choice-index">02 / EXPERIENCE</div>
+                <div class="choice-icon"><i class="fa-solid fa-ticket"></i></div>
+                <h2>Attendee</h2>
+                <p class="choice-audience">YOUR NEXT GREAT DAY OUT</p>
+                <p class="choice-copy">Find what's happening on campus and keep your event tickets close at hand.</p>
+                <ul>
+                    <li><i class="fa-solid fa-check"></i> Explore college events</li>
+                    <li><i class="fa-solid fa-check"></i> Register with your details</li>
+                    <li><i class="fa-solid fa-check"></i> Access your digital ticket</li>
+                </ul>
+                <button class="portal-enter" type="button" onclick="enterPortal('attendee')">Attendee Portal <i class="fa-solid fa-arrow-right"></i></button>
+            </article>
+            <p class="portal-notice"><i class="fa-solid fa-circle-info"></i> Portal selection is for demonstration only. This application does not provide sign-in or access control.</p>
+        </div>
+    </section>
+
+    <div id="toast-container" aria-live="polite" aria-atomic="false"></div>
+
+    <div id="organizer-portal" class="app-container portal-shell is-hidden">
         <!-- Sidebar -->
         <aside class="sidebar">
             <div class="sidebar-header">
@@ -30,11 +118,23 @@
                 <button class="nav-btn" onclick="showTab('attendees')" id="nav-attendees">
                     <i class="fa-solid fa-users"></i> Attendees
                 </button>
+                <button class="nav-btn" onclick="showTab('registrations')" id="nav-registrations">
+                    <i class="fa-solid fa-clipboard-list"></i> Registrations
+                </button>
                 <button class="nav-btn" onclick="showTab('tickets')" id="nav-tickets">
                     <i class="fa-solid fa-qrcode"></i> Tickets
                 </button>
                 <button class="nav-btn checkin-btn" onclick="showTab('checkin')" id="nav-checkin">
                     <i class="fa-solid fa-camera"></i> QR Check-in
+                </button>
+                <button class="nav-btn" onclick="showTab('attendance')" id="nav-attendance">
+                    <i class="fa-solid fa-chart-column"></i> Attendance
+                </button>
+                <button class="nav-btn" onclick="showTab('organizer-profile')" id="nav-organizer-profile">
+                    <i class="fa-solid fa-user-gear"></i> Profile
+                </button>
+                <button class="nav-btn nav-switch" type="button" onclick="logout()">
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i> Log out
                 </button>
             </nav>
         </aside>
@@ -43,6 +143,9 @@
         <div class="main-wrapper">
             <!-- Topbar -->
             <header class="topbar">
+                <button class="icon-btn mobile-menu-btn" type="button" title="Open navigation" aria-label="Open navigation" onclick="toggleOrganizerMenu()">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
                 <div class="topbar-title">
                     <h2 id="page-title">Dashboard</h2>
                 </div>
@@ -51,23 +154,16 @@
                     <button class="icon-btn" title="Toggle Theme" onclick="toggleTheme()">
                         <i class="fa-solid fa-moon"></i>
                     </button>
-                    <button class="icon-btn" title="Notifications">
-                        <i class="fa-solid fa-bell"></i>
-                        <span class="badge">3</span>
-                    </button>
                     <div class="profile">
                         <div class="avatar">A</div>
-                        <span class="profile-name">Admin</span>
+                        <span class="profile-name">Organizer</span>
                     </div>
+                    <button class="topbar-switch logout-button" type="button" onclick="logout()"><i class="fa-solid fa-arrow-right-from-bracket"></i><span>Log out</span></button>
                 </div>
             </header>
 
             <!-- Content Area -->
             <main class="content-area">
-                
-                <!-- Toast Notification Container -->
-                <div id="toast-container"></div>
-
                 <!-- Dashboard Tab -->
                 <section id="dashboard" class="tab-content active">
                     <div class="dashboard-header">
@@ -85,8 +181,22 @@
                         <div class="stat-card info">
                             <div class="stat-icon"><i class="fa-solid fa-ticket"></i></div>
                             <div class="stat-details">
-                                <h3>Total Tickets</h3>
+                                <h3>Registrations</h3>
                                 <span class="stat-value" id="total-tickets">0</span>
+                            </div>
+                        </div>
+                        <div class="stat-card issued-stat">
+                            <div class="stat-icon"><i class="fa-solid fa-ticket"></i></div>
+                            <div class="stat-details">
+                                <h3>Tickets Issued</h3>
+                                <span class="stat-value" id="total-issued">0</span>
+                            </div>
+                        </div>
+                        <div class="stat-card attendees-stat">
+                            <div class="stat-icon"><i class="fa-solid fa-user-group"></i></div>
+                            <div class="stat-details">
+                                <h3>Total Attendees</h3>
+                                <span class="stat-value" id="total-attendees">0</span>
                             </div>
                         </div>
                         <div class="stat-card success">
@@ -104,6 +214,10 @@
                             </div>
                         </div>
                     </div>
+                    <div class="dashboard-section-heading">
+                        <div><p class="eyebrow">LIVE OVERVIEW</p><h2>Event attendance &amp; capacity</h2></div>
+                        <button class="text-action" type="button" onclick="showTab('attendance')">View attendance <i class="fa-solid fa-arrow-right"></i></button>
+                    </div>
                     
                     <div class="card mt-4">
                         <div class="card-header">
@@ -119,8 +233,9 @@
 
                 <!-- Events Tab -->
                 <section id="events" class="tab-content">
-                    <div class="section-header">
-                        <p class="text-muted">Manage your college events and ticket capacity</p>
+                    <div class="page-heading">
+                        <div><p class="eyebrow">EVENT OPERATIONS</p><h1>Events</h1><p class="text-muted">Manage your college events and ticket capacity.</p></div>
+                        <button class="btn btn-primary" type="button" onclick="document.getElementById('event-name').focus()"><i class="fa-solid fa-plus"></i> Create event</button>
                     </div>
                     
                     <div class="card mb-4">
@@ -168,7 +283,7 @@
                             <table id="events-table" class="modern-table">
                                 <thead>
                                     <tr>
-                                        <th>ID</th><th>Event</th><th>Date</th><th>Venue</th><th>Capacity</th><th>Price</th><th>Actions</th>
+                                        <th>ID</th><th>Event</th><th>Date</th><th>Venue</th><th>Capacity</th><th>Price</th><th>Registrations</th><th>Status</th><th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody></tbody>
@@ -213,6 +328,11 @@
                     </div>
 
                     <div class="card table-card">
+                        <div class="table-toolbar">
+                            <label class="table-search"><i class="fa-solid fa-magnifying-glass"></i><input type="search" id="attendee-search" placeholder="Search name, email, phone" aria-label="Search attendees"></label>
+                            <select id="attendee-event-filter" aria-label="Filter by event"><option value="">All events</option></select>
+                            <select id="attendee-status-filter" aria-label="Filter by ticket status"><option value="">All ticket statuses</option><option value="VALID">Valid</option><option value="USED">Used</option><option value="NONE">No ticket</option></select>
+                        </div>
                         <div class="card-header">
                             <h3><i class="fa-solid fa-users"></i> All Attendees</h3>
                         </div>
@@ -220,7 +340,7 @@
                             <table id="attendees-table" class="modern-table">
                                 <thead>
                                     <tr>
-                                        <th>Attendee</th><th>Email</th><th>Phone</th><th>Actions</th>
+                                        <th>Attendee</th><th>Email</th><th>Phone</th><th>Event</th><th>Ticket ID</th><th>Ticket status</th><th>Check-in</th><th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody></tbody>
@@ -264,7 +384,7 @@
                             <table id="tickets-table" class="modern-table ticket-table">
                                 <thead>
                                     <tr>
-                                        <th>Ticket</th><th>Event</th><th>Attendee</th><th>Status</th><th>Issued</th>
+                                        <th>Ticket</th><th>Event</th><th>Attendee</th><th>QR token</th><th>Issued</th><th>Status</th>
                                     </tr>
                                 </thead>
                                 <tbody></tbody>
@@ -301,10 +421,103 @@
                     </div>
 
                 </section>
+
+                <section id="registrations" class="tab-content">
+                    <div class="page-heading"><div><p class="eyebrow">AUDIENCE</p><h1>Registrations</h1><p class="text-muted">Every issued ticket is a confirmed event registration.</p></div></div>
+                    <div class="metric-strip"><span><strong id="registration-total">0</strong> registrations</span><span><strong id="registration-events">0</strong> events</span></div>
+                    <div class="card table-card">
+                        <div class="table-responsive">
+                            <table id="registrations-table" class="modern-table">
+                                <thead><tr><th>Ticket</th><th>Attendee</th><th>Event</th><th>Registered</th><th>Ticket status</th><th>Check-in</th></tr></thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="attendance" class="tab-content">
+                    <div class="page-heading"><div><p class="eyebrow">ON THE DAY</p><h1>Attendance</h1><p class="text-muted">Capacity, ticket issuance, and check-ins by event.</p></div></div>
+                    <div id="attendance-page-list" class="attendance-page-list"></div>
+                </section>
+
+                <section id="organizer-profile" class="tab-content">
+                    <div class="page-heading"><div><p class="eyebrow">YOUR ACCOUNT</p><h1>Organizer profile</h1><p class="text-muted">Update the name and email on your account.</p></div></div>
+                    <div class="profile-settings-card card"><form id="organizer-profile-form" class="auth-form profile-settings-form"><label for="organizer-profile-name">Name</label><input id="organizer-profile-name" required maxlength="120"><label for="organizer-profile-email">Email</label><input id="organizer-profile-email" type="email" required><p id="organizer-profile-error" class="auth-error" role="alert"></p><button class="btn btn-primary" type="submit">Update profile</button></form></div>
+                </section>
             </main>
         </div>
     </div>
 
+    <div id="attendee-portal" class="attendee-shell portal-shell is-hidden">
+        <aside class="attendee-sidebar">
+            <div class="sidebar-header"><div class="logo"><i class="fa-solid fa-ticket"></i> FESTPASS</div><div class="subtitle">YOUR EVENT PASS</div></div>
+            <nav class="sidebar-nav attendee-nav">
+                <button class="nav-btn active" type="button" data-attendee-tab="home"><i class="fa-solid fa-house"></i> Home</button>
+                <button class="nav-btn" type="button" data-attendee-tab="events"><i class="fa-solid fa-calendar-days"></i> Events</button>
+                <button class="nav-btn" type="button" data-attendee-tab="registrations"><i class="fa-solid fa-clipboard-list"></i> My registrations</button>
+                <button class="nav-btn" type="button" data-attendee-tab="tickets"><i class="fa-solid fa-ticket"></i> My tickets</button>
+                <button class="nav-btn" type="button" data-attendee-tab="status"><i class="fa-solid fa-circle-check"></i> Check-in status</button>
+                <button class="nav-btn" type="button" data-attendee-tab="profile"><i class="fa-solid fa-user"></i> Profile</button>
+                <button class="nav-btn nav-switch" type="button" onclick="logout()"><i class="fa-solid fa-arrow-right-from-bracket"></i> Log out</button>
+            </nav>
+            <div class="sidebar-footnote"><i class="fa-solid fa-shield-halved"></i> Session secured<br>Role access enforced by server.</div>
+        </aside>
+        <div class="attendee-main">
+            <header class="attendee-topbar">
+                <div><p class="eyebrow">FESTPASS / ATTENDEE</p><h2 id="attendee-page-title">Home</h2></div>
+                <div class="attendee-top-actions"><span id="attendee-date" class="date-display"></span><span id="attendee-profile-label" class="attendee-profile-label">Attendee</span><button class="topbar-switch logout-button" type="button" onclick="logout()"><i class="fa-solid fa-arrow-right-from-bracket"></i><span>Log out</span></button></div>
+            </header>
+            <main class="attendee-content">
+                <section class="attendee-page active" id="attendee-home">
+                    <div class="attendee-hero"><div><p class="eyebrow">YOUR CAMPUS, IN MOTION</p><h1>Welcome,<br><span id="attendee-welcome-name">Attendee.</span></h1><p>Discover upcoming college events and keep your digital tickets in one place.</p><button class="btn btn-primary" type="button" data-attendee-tab="events">Explore events <i class="fa-solid fa-arrow-right"></i></button></div><div class="hero-ticket-art" aria-hidden="true"><span>FP / 26</span><i class="fa-solid fa-ticket"></i><small>YOUR NEXT EVENT<br>STARTS HERE</small></div></div>
+                    <div class="attendee-home-grid">
+                        <div class="profile-setup-panel card">
+                            <div class="card-heading"><div><p class="eyebrow">YOUR PASS</p><h2 id="profile-form-title">Set up your attendee details</h2></div><i class="fa-solid fa-id-card heading-icon"></i></div>
+                            <p class="text-muted">Your profile is linked to your account. Tickets and registration details are private to your session.</p>
+                            <form id="attendee-profile-form" class="modern-form profile-form">
+                                <div class="form-group"><label for="profile-name">Full name</label><input type="text" id="profile-name" autocomplete="name" readonly required></div>
+                                <div class="form-group"><label for="profile-email">Email address</label><input type="email" id="profile-email" autocomplete="email" readonly required></div>
+                                <div class="form-group"><label for="profile-phone">Phone number</label><input type="tel" id="profile-phone" autocomplete="tel" required></div>
+                                <div class="form-actions"><button class="btn btn-primary" type="button" id="profile-submit" data-attendee-tab="profile">Manage profile</button></div>
+                            </form>
+                            <button id="clear-profile" class="text-action clear-profile-btn is-hidden" type="button" data-attendee-tab="profile">Manage profile</button>
+                        </div>
+                        <div class="next-up-panel card"><div class="card-heading"><div><p class="eyebrow">YOUR ACTIVITY</p><h2>My FestPass</h2></div><i class="fa-solid fa-ticket heading-icon"></i></div><div class="attendee-mini-stats"><div><strong id="attendee-ticket-count">0</strong><span>Tickets</span></div><div><strong id="attendee-valid-count">0</strong><span>Ready to use</span></div><div><strong id="attendee-used-count">0</strong><span>Checked in</span></div></div><button class="text-action" type="button" data-attendee-tab="tickets">View my tickets <i class="fa-solid fa-arrow-right"></i></button></div>
+                    </div>
+                    <div class="dashboard-section-heading"><div><p class="eyebrow">FIND YOUR NEXT</p><h2>Upcoming events</h2></div><button class="text-action" type="button" data-attendee-tab="events">All events <i class="fa-solid fa-arrow-right"></i></button></div>
+                    <div id="attendee-home-events" class="event-card-grid"></div>
+                </section>
+                <section class="attendee-page" id="attendee-events">
+                    <div class="page-heading"><div><p class="eyebrow">DISCOVER</p><h1>Find your next event</h1><p class="text-muted">Explore what's happening across campus.</p></div></div>
+                    <div class="event-filters"><label class="table-search"><i class="fa-solid fa-magnifying-glass"></i><input type="search" id="event-search" placeholder="Search events or venues" aria-label="Search events"></label><select id="event-status-filter" aria-label="Filter events"><option value="ALL">All events</option><option value="OPEN">Registration open</option><option value="FULL">Sold out</option><option value="PAST">Past events</option></select></div>
+                    <div id="attendee-events-grid" class="event-card-grid"></div>
+                </section>
+                <section class="attendee-page" id="attendee-registrations">
+                    <div class="page-heading"><div><p class="eyebrow">YOUR PLANS</p><h1>My registrations</h1><p class="text-muted">Events linked to your attendee details.</p></div></div>
+                    <div id="attendee-registrations-list" class="attendee-record-list"></div>
+                </section>
+                <section class="attendee-page" id="attendee-tickets">
+                    <div class="page-heading"><div><p class="eyebrow">AT THE READY</p><h1>My tickets</h1><p class="text-muted">Your digital passes, with QR tokens issued by FestPass.</p></div></div>
+                    <div id="attendee-tickets-list" class="attendee-ticket-grid"></div>
+                </section>
+                <section class="attendee-page" id="attendee-status">
+                    <div class="page-heading"><div><p class="eyebrow">ENTRY STATUS</p><h1>Check-in status</h1><p class="text-muted">See whether each ticket is ready for entry or already used.</p></div></div>
+                    <div id="attendee-status-list" class="attendee-record-list"></div>
+                </section>
+                <section class="attendee-page" id="attendee-profile">
+                    <div class="page-heading"><div><p class="eyebrow">YOUR ACCOUNT</p><h1>My profile</h1><p class="text-muted">Update the attendee details linked to your tickets.</p></div></div>
+                    <div class="profile-settings-card card"><form id="attendee-account-profile-form" class="auth-form profile-settings-form"><label for="account-profile-name">Name</label><input id="account-profile-name" required maxlength="120"><label for="account-profile-email">Email</label><input id="account-profile-email" type="email" required><label for="account-profile-phone">Phone</label><input id="account-profile-phone" type="tel" required><p id="attendee-account-profile-error" class="auth-error" role="alert"></p><button class="btn btn-primary" type="submit">Update profile</button></form></div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <dialog id="event-details-dialog" class="event-dialog">
+        <button class="dialog-close" type="button" aria-label="Close event details" onclick="closeEventDetails()"><i class="fa-solid fa-xmark"></i></button>
+        <div id="event-details-content"></div>
+    </dialog>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
